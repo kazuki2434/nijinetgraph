@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>D3 v5 force simulation node detail</title>
+  <style>
+    svg {
+      background: #000000;
+      font-family: Meiryo;
+    }
+    .selected circle{
+      fill: tomato;
+    }
+    .linkSelected {
+      stroke: tomato;
+    }
+    .conected circle{
+      fill: orange;
+    }
+  </style>
+</head>
+<body>
+  <svg width="1200" height="1200"></svg>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+  var width = document.querySelector("svg").clientWidth;
+  var height = document.querySelector("svg").clientHeight;
+  var num_node = 104;
+  var nodesData = [];
+  for(var i = 0; i < num_node; i++) {
+    
+    nodesData.push({
+      "index": i,
+      "x": width * Math.random(),
+      "y": height * Math.random(),
+    });
+  }
+var linksData = [
+{"source": 0, "target": 13, "v": 10},
+{"source": 0, "target": 71, "v": 5},
+{"source": 1, "target": 27, "v": 20},
+{"source": 1, "target": 43, "v": 11},
+{"source": 2, "target": 12, "v": 4},
+{"source": 2, "target": 82, "v": 2},
+{"source": 4, "target": 18, "v": 5},
+{"source": 4, "target": 5, "v": 5},
+{"source": 5, "target": 57, "v": 3},
+{"source": 5, "target": 55, "v": 3},
+{"source": 7, "target": 40, "v": 14},
+{"source": 7, "target": 37, "v": 13},
+{"source": 8, "target": 47, "v": 16},
+{"source": 8, "target": 30, "v": 16},
+{"source": 9, "target": 43, "v": 12},
+{"source": 9, "target": 30, "v": 12},
+{"source": 10, "target": 27, "v": 22},
+{"source": 10, "target": 92, "v": 10},
+{"source": 11, "target": 82, "v": 5},
+{"source": 11, "target": 71, "v": 4},
+{"source": 12, "target": 72, "v": 10},
+{"source": 12, "target": 82, "v": 6},
+{"source": 13, "target": 54, "v": 8},
+{"source": 13, "target": 21, "v": 6},
+{"source": 14, "target": 27, "v": 43},
+{"source": 14, "target": 1, "v": 38},
+{"source": 15, "target": 7, "v": 9},
+{"source": 15, "target": 73, "v": 7},
+{"source": 16, "target": 1, "v": 19},
+{"source": 16, "target": 9, "v": 15},
+{"source": 17, "target": 26, "v": 17},
+{"source": 17, "target": 72, "v": 16},
+{"source": 18, "target": 90, "v": 2},
+{"source": 18, "target": 58, "v": 2},
+{"source": 19, "target": 47, "v": 14},
+{"source": 19, "target": 43, "v": 13},
+{"source": 20, "target": 93, "v": 16},
+{"source": 20, "target": 41, "v": 13},
+{"source": 21, "target": 36, "v": 12},
+{"source": 21, "target": 0, "v": 6},
+{"source": 22, "target": 40, "v": 22},
+{"source": 22, "target": 56, "v": 13},
+{"source": 23, "target": 51, "v": 37},
+{"source": 23, "target": 84, "v": 16},
+{"source": 24, "target": 72, "v": 28},
+{"source": 24, "target": 33, "v": 21},
+{"source": 25, "target": 93, "v": 11},
+{"source": 25, "target": 20, "v": 11},
+{"source": 26, "target": 93, "v": 46},
+{"source": 26, "target": 78, "v": 24},
+{"source": 28, "target": 89, "v": 4},
+{"source": 28, "target": 93, "v": 3},
+{"source": 29, "target": 34, "v": 28},
+{"source": 29, "target": 71, "v": 21},
+{"source": 30, "target": 93, "v": 19},
+{"source": 31, "target": 40, "v": 12},
+{"source": 31, "target": 44, "v": 6},
+{"source": 32, "target": 70, "v": 8},
+{"source": 32, "target": 96, "v": 4},
+{"source": 33, "target": 82, "v": 11},
+{"source": 33, "target": 41, "v": 10},
+{"source": 34, "target": 20, "v": 7},
+{"source": 35, "target": 92, "v": 13},
+{"source": 35, "target": 43, "v": 8},
+{"source": 36, "target": 18, "v": 7},
+{"source": 36, "target": 84, "v": 4},
+{"source": 37, "target": 43, "v": 29},
+{"source": 37, "target": 40, "v": 24},
+{"source": 38, "target": 93, "v": 8},
+{"source": 38, "target": 71, "v": 4},
+{"source": 39, "target": 43, "v": 16},
+{"source": 39, "target": 35, "v": 11},
+{"source": 40, "target": 93, "v": 21},
+{"source": 41, "target": 57, "v": 17},
+{"source": 41, "target": 7, "v": 13},
+{"source": 42, "target": 75, "v": 5},
+{"source": 42, "target": 77, "v": 3},
+{"source": 44, "target": 16, "v": 15},
+{"source": 44, "target": 41, "v": 9},
+{"source": 45, "target": 26, "v": 11},
+{"source": 45, "target": 20, "v": 11},
+{"source": 46, "target": 68, "v": 12},
+{"source": 47, "target": 9, "v": 24},
+{"source": 48, "target": 25, "v": 4},
+{"source": 48, "target": 61, "v": 3},
+{"source": 50, "target": 31, "v": 7},
+{"source": 50, "target": 89, "v": 5},
+{"source": 51, "target": 75, "v": 19},
+{"source": 52, "target": 37, "v": 12},
+{"source": 52, "target": 16, "v": 8},
+{"source": 53, "target": 9, "v": 7},
+{"source": 53, "target": 27, "v": 6},
+{"source": 54, "target": 90, "v": 21},
+{"source": 54, "target": 66, "v": 17},
+{"source": 55, "target": 26, "v": 11},
+{"source": 55, "target": 41, "v": 10},
+{"source": 56, "target": 72, "v": 15},
+{"source": 57, "target": 74, "v": 28},
+{"source": 58, "target": 17, "v": 12},
+{"source": 58, "target": 72, "v": 11},
+{"source": 59, "target": 78, "v": 9},
+{"source": 59, "target": 51, "v": 9},
+{"source": 60, "target": 16, "v": 5},
+{"source": 60, "target": 17, "v": 4},
+{"source": 61, "target": 95, "v": 16},
+{"source": 61, "target": 92, "v": 11},
+{"source": 62, "target": 103, "v": 17},
+{"source": 62, "target": 85, "v": 16},
+{"source": 63, "target": 51, "v": 19},
+{"source": 63, "target": 75, "v": 15},
+{"source": 64, "target": 52, "v": 4},
+{"source": 64, "target": 97, "v": 2},
+{"source": 65, "target": 66, "v": 9},
+{"source": 65, "target": 84, "v": 4},
+{"source": 66, "target": 84, "v": 29},
+{"source": 66, "target": 90, "v": 19},
+{"source": 67, "target": 84, "v": 20},
+{"source": 67, "target": 66, "v": 17},
+{"source": 68, "target": 78, "v": 7},
+{"source": 70, "target": 96, "v": 4},
+{"source": 71, "target": 82, "v": 10},
+{"source": 71, "target": 27, "v": 7},
+{"source": 72, "target": 55, "v": 28},
+{"source": 72, "target": 23, "v": 24},
+{"source": 73, "target": 7, "v": 9},
+{"source": 74, "target": 78, "v": 10},
+{"source": 75, "target": 66, "v": 16},
+{"source": 76, "target": 99, "v": 10},
+{"source": 76, "target": 61, "v": 10},
+{"source": 77, "target": 51, "v": 8},
+{"source": 77, "target": 41, "v": 7},
+{"source": 78, "target": 37, "v": 14},
+{"source": 79, "target": 101, "v": 4},
+{"source": 79, "target": 27, "v": 4},
+{"source": 81, "target": 78, "v": 9},
+{"source": 81, "target": 9, "v": 9},
+{"source": 83, "target": 43, "v": 25},
+{"source": 83, "target": 17, "v": 22},
+{"source": 85, "target": 102, "v": 98},
+{"source": 85, "target": 103, "v": 97},
+{"source": 86, "target": 25, "v": 8},
+{"source": 86, "target": 98, "v": 6},
+{"source": 87, "target": 91, "v": 9},
+{"source": 87, "target": 14, "v": 8},
+{"source": 88, "target": 7, "v": 9},
+{"source": 88, "target": 61, "v": 6},
+{"source": 89, "target": 27, "v": 7},
+{"source": 90, "target": 92, "v": 20},
+{"source": 91, "target": 14, "v": 29},
+{"source": 92, "target": 75, "v": 13},
+{"source": 94, "target": 88, "v": 6},
+{"source": 94, "target": 103, "v": 2},
+{"source": 95, "target": 102, "v": 6},
+{"source": 96, "target": 95, "v": 18},
+{"source": 97, "target": 8, "v": 5},
+{"source": 97, "target": 88, "v": 4},
+{"source": 98, "target": 92, "v": 9},
+{"source": 99, "target": 84, "v": 12},
+{"source": 100, "target": 103, "v": 116},
+{"source": 100, "target": 102, "v": 116},
+{"source": 3, "target": 32, "v": 4},
+{"source": 49, "target": 50, "v": 12},
+{"source": 69, "target": 89, "v": 12},
+{"source": 80, "target": 29, "v": 16},
+];
+  // 2. svg要素を配置
+  var link = d3.select("svg")
+    .selectAll("line")
+    .data(linksData)
+    .enter()
+    .append("line")
+    .attr("stroke-width", 2)
+    .attr("stroke", "white");
+
+  var nodeGroup = d3.select("svg")
+    .selectAll("g")
+    .data(nodesData)
+    .enter()
+    .append("g")
+    .on("click", clicked)
+    .call(d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended));
+    
+
+  function clicked(d) {
+
+    d3.selectAll(".selected").classed("selected", false);
+    d3.selectAll(".conected").classed("conected", false);
+    d3.selectAll("line").classed("linkSelected", false);
+
+    d3.select(this).classed("selected", true);
+    d3.selectAll("line")
+      .filter(function(v, i) {
+        if(d == v.source) {
+          nodeGroup.each(function(vj, j) {
+            if(v.target == vj) d3.select(this).classed("conected", true);
+          });
+          return true;
+        } else if(d == v.target) {
+          nodeGroup.each(function(vj, j) {
+            if(v.source == vj) d3.select(this).classed("conected", true);
+          });
+          return true;
+        }
+        }).classed("linkSelected", true);
+  }
+
+  nodeGroup.append("circle")
+    .attr("cx", function(d) { return d.x; })
+    .attr("cy", function(d) { return d.y; })
+    .attr("r", 22)
+    .attr("fill", "white");
+    //.attr("stroke", "black");
+
+ nodeGroup.append("image")
+    .attr("x", function(d) { return d.x - 20; })
+    .attr("y", function(d) { return d.y - 20; })
+    .attr("xlink:href",  function(d) { return "./icons/" + String(d.index) + ".png";})
+    .attr("height", 40)
+    .attr("width", 40);
+
+
+  // 3. forceSimulation設定
+  var simulation = d3.forceSimulation()
+    .force("link",
+      d3.forceLink()
+      //.distance(30)
+      //.strength(function(d) { return 0.001 * d.v; })
+      .strength(0.05)
+      .iterations(16))
+    .force("collide",
+      d3.forceCollide()
+      .radius(10)
+      .strength(1)
+      .iterations(16))
+    .force("charge", d3.forceManyBody().strength(-200))
+    .force("x", d3.forceX().strength(0.02).x(width / 2))
+    .force("y", d3.forceY().strength(0.02).y(height / 2));
+
+  simulation
+    .nodes(nodesData)
+    .on("tick", ticked);
+
+  simulation.force("link")
+    .links(linksData)
+    .id(function(d) { return d.index; });
+
+  // 4. forceSimulation 描画更新用関数
+  function ticked() {
+    link
+      .attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; });
+    nodeGroup.select("circle")
+      .attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; });
+    nodeGroup.select("image")
+      .attr("x", function(d) { return d.x - 20; })
+      .attr("y", function(d) { return d.y - 20; });
+  }
+
+  // 5. ドラッグ時のイベント関数
+  function dragstarted(d) {
+    if(!d3.event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
+  }
+
+  function dragged(d) {
+    d.fx = d3.event.x;
+    d.fy = d3.event.y;
+  }
+
+  function dragended(d) {
+    if(!d3.event.active) simulation.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
+  }
+  </script>
+</body>
+
+</html>
